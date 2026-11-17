@@ -19,6 +19,21 @@ export type Credentials = paths['/v1/auth/login']['post']['requestBody']['conten
 export type ChatRequest = paths['/v1/playground/chat']['post']['requestBody']['content']['application/json'];
 export type WardrobeList = Json<'/v1/wardrobe/items', 'get'>;
 export type WardrobeItem = WardrobeList['items'][number];
+export type NewItem = paths['/v1/wardrobe/items']['post']['requestBody']['content']['application/json'];
+export type NewPhoto = paths['/v1/photos']['post']['requestBody']['content']['application/json'];
+export type PhotoUpload = Json<'/v1/photos', 'post'>;
+export type Photo = Json<'/v1/photos/{id}', 'get'>;
+
+/** Sends the file straight to storage at the presigned URL. The API never receives it. */
+export async function uploadPhoto(upload: PhotoUpload['upload'], file: Blob): Promise<void> {
+  let res: Response;
+  try {
+    res = await fetch(upload.url, { method: upload.method, headers: upload.headers, body: file });
+  } catch {
+    throw new ApiError(0, 'network');
+  }
+  if (!res.ok) throw new ApiError(res.status, res.statusText);
+}
 
 export class ApiError extends Error {
   readonly status: number;
@@ -78,4 +93,12 @@ export const api = {
   models: async (token: string) => (await (await request('/v1/models', { token })).json()) as ModelsStatus,
   wardrobe: async (token: string) =>
     (await (await request('/v1/wardrobe/items', { token })).json()) as WardrobeList,
+  createItem: async (token: string, item: NewItem) =>
+    (await (await post('/v1/wardrobe/items', item, token)).json()) as WardrobeItem,
+  startUpload: async (token: string, photo: NewPhoto) =>
+    (await (await post('/v1/photos', photo, token)).json()) as PhotoUpload,
+  completeUpload: async (token: string, id: string) =>
+    (await (await request(`/v1/photos/${id}/complete`, { method: 'POST', token })).json()) as Photo,
+  photo: async (token: string, id: string) =>
+    (await (await request(`/v1/photos/${id}`, { token })).json()) as Photo,
 };
