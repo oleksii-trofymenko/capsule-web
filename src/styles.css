@@ -857,3 +857,72 @@ textarea {
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Profile and quiz */
+.quiz {
+  display: grid;
+  gap: 1rem;
+}
+
+.question {
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  padding: 0.75rem 1rem 1rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.question legend {
+  font-weight: 700;
+  padding: 0 0.25rem;
+}
+
+.size-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.profile-block {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.profile-answers dt {
+  font-size: var(--step--1);
+  color: var(--thread);
+}
+
+.profile-answers dd {
+  margin: 0 0 0.5rem;
+}
+
+.feedback-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.feedback-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tag {
+  font-size: var(--step--1);
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+
+.feedback-note {
+  font-style: italic;
+}

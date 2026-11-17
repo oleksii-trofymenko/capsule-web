@@ -1,8 +1,9 @@
 import { useState, type ReactNode } from 'react';
 import { en } from '../../strings/en';
+import { ProfileScreen } from '../profile/ProfileScreen';
 import { WardrobeScreen } from '../wardrobe/WardrobeScreen';
 
-type Tab = 'wardrobe' | 'fittingRoom';
+type Tab = 'wardrobe' | 'profile' | 'fittingRoom';
 
 interface Props {
   email: string;
@@ -20,6 +21,7 @@ export function AppShell({ email, onSignOut, fittingRoom }: Props) {
   const [tab, setTab] = useState<Tab>('wardrobe');
   const tabs: { id: Tab; label: string }[] = [
     { id: 'wardrobe', label: t.tabs.wardrobe },
+    { id: 'profile', label: t.tabs.profile },
     ...(fittingRoom ? [{ id: 'fittingRoom' as const, label: t.tabs.fittingRoom }] : []),
   ];
 
@@ -35,6 +37,7 @@ export function AppShell({ email, onSignOut, fittingRoom }: Props) {
 
       <main className="shell-main">
         {tab === 'wardrobe' && <WardrobeScreen />}
+        {tab === 'profile' && <ProfileScreen />}
         {tab === 'fittingRoom' && fittingRoom}
       </main>
 
