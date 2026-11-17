@@ -1,0 +1,75 @@
+/** Every user-facing string lives here, so other locales can be added later. */
+export const en = {
+  appName: 'Capsule fitting room',
+  appPurpose:
+    'A test chat for seeing how the stylist model answers, what it understands and how it uses its tools.',
+
+  auth: {
+    signInTitle: 'Sign in to the fitting room',
+    registerTitle: 'Create a test account',
+    email: 'Email',
+    password: 'Password',
+    passwordHint: 'At least 10 characters.',
+    signIn: 'Sign in',
+    register: 'Create account',
+    toRegister: 'No account yet? Create one',
+    toSignIn: 'Already have an account? Sign in',
+    working: 'Working…',
+    sessionEnded: 'Your session ended. Sign in again to continue.',
+  },
+
+  chat: {
+    emptyTitle: 'Ask the stylist something',
+    emptyBody: 'Each of these makes the model reach for a different tool.',
+    samples: [
+      'What should I wear to a wedding this weekend?',
+      'Which shoes do I own?',
+      'Put together a smart office outfit for today.',
+    ],
+    composerLabel: 'Message the stylist',
+    composerPlaceholder: 'Ask about an outfit, an occasion or your wardrobe',
+    send: 'Send',
+    stop: 'Stop',
+    clear: 'Clear chat',
+    settings: 'Settings',
+    thinking: 'Waiting for the first word…',
+    stopped: 'Stopped.',
+    toolRunning: 'running…',
+    toolFailed: 'failed',
+    toolArgs: 'Sent',
+    toolResult: 'Returned',
+    noArgs: 'no arguments',
+    firstWord: 'first word',
+    total: 'total',
+    modelCalls: (n: number) => (n === 1 ? '1 model call' : `${n} model calls`),
+    tokens: (input: number, output: number) => `${input} tokens in, ${output} out`,
+    answeredBy: (model: string) => `Answered by ${model}`,
+    toolsOff: 'tools off',
+    customPrompt: 'custom system prompt',
+  },
+
+  settings: {
+    title: 'Settings',
+    close: 'Close settings',
+    tools: 'Let the model use tools',
+    toolsHint: 'Switch off to see how it answers from its own knowledge alone.',
+    systemPrompt: 'System prompt',
+    systemPromptHint: 'Leave empty to use the default. Changes apply to the next message.',
+    defaultPromptLabel: 'Default prompt in use',
+    resetPrompt: 'Use the default prompt',
+    models: 'Models',
+    refresh: 'Check again',
+    providerUp: 'reachable',
+    providerDown: 'not reachable',
+    modelsError: 'Could not load the model status.',
+    signedInAs: (email: string) => `Signed in as ${email}`,
+    signOut: 'Sign out',
+  },
+
+  errors: {
+    network:
+      'Cannot reach the API. Check that capsule-api is running and that this address is in its CORS_ORIGINS.',
+    generic: 'Something went wrong. Try again.',
+    tooManyRequests: 'Too many requests. Wait a minute and try again.',
+  },
+} as const;
