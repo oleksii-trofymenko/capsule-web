@@ -81,7 +81,7 @@ export function ChatScreen({ session, onTokens, onSessionEnded, onSignOut }: Pro
   return (
     <div className="room">
       <header className="bar">
-        <h1>{en.appName}</h1>
+        <h1>{en.chat.title}</h1>
         <div className="bar-actions">
           <button
             className="link"

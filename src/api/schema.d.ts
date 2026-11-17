@@ -148,6 +148,150 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PhotosController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/photos/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PhotosController_get_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/photos/{id}/complete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PhotosController_complete_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/wardrobe/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["WardrobeController_list_v1"];
+        put?: never;
+        post: operations["WardrobeController_create_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/wardrobe/items/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["WardrobeController_get_v1"];
+        put?: never;
+        post?: never;
+        delete: operations["WardrobeController_remove_v1"];
+        options?: never;
+        head?: never;
+        patch: operations["WardrobeController_update_v1"];
+        trace?: never;
+    };
+    "/v1/profile/quiz": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ProfileController_quiz_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ProfileController_get_v1"];
+        put: operations["ProfileController_save_v1"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/outfits/{id}/feedback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["OutfitsController_feedback_v1"];
+        trace?: never;
+    };
+    "/v1/stylist/chat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["StylistController_chat_v1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -424,6 +568,824 @@ export interface operations {
         };
         responses: {
             /** @description SSE stream of start, token, tool_call, tool_result, done and error events */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PhotosController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** @enum {string} */
+                    contentType: "image/jpeg" | "image/png" | "image/webp" | "image/heic" | "image/heif";
+                    /** @description Exact file size in bytes; the upload URL accepts only this size */
+                    size: number;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        photo: {
+                            /** Format: uuid */
+                            id: string;
+                            /** @enum {string} */
+                            status: "pending" | "uploaded";
+                            contentType: string;
+                            size: number;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            uploadedAt: string | null;
+                            /**
+                             * @description Tagging starts after upload; poll until it is no longer pending
+                             * @enum {string}
+                             */
+                            tagStatus: "pending" | "tagged" | "failed";
+                            /** @description Pre-fill for the wardrobe item; the user corrects it there */
+                            suggestedTags: {
+                                name: string;
+                                /** @enum {string} */
+                                category: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                                colour: string;
+                                /** @enum {string} */
+                                formality: "casual" | "smart" | "formal";
+                                seasons: ("spring" | "summer" | "autumn" | "winter")[];
+                            } | null;
+                        };
+                        /** @description Send the file body straight to this URL, then call complete */
+                        upload: {
+                            /** Format: uri */
+                            url: string;
+                            /** @enum {string} */
+                            method: "PUT";
+                            headers: {
+                                "Content-Type": string;
+                            };
+                            /** Format: date-time */
+                            expiresAt: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    PhotosController_get_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        /** @enum {string} */
+                        status: "pending" | "uploaded";
+                        contentType: string;
+                        size: number;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        uploadedAt: string | null;
+                        /**
+                         * @description Tagging starts after upload; poll until it is no longer pending
+                         * @enum {string}
+                         */
+                        tagStatus: "pending" | "tagged" | "failed";
+                        /** @description Pre-fill for the wardrobe item; the user corrects it there */
+                        suggestedTags: {
+                            name: string;
+                            /** @enum {string} */
+                            category: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                            colour: string;
+                            /** @enum {string} */
+                            formality: "casual" | "smart" | "formal";
+                            seasons: ("spring" | "summer" | "autumn" | "winter")[];
+                        } | null;
+                    };
+                };
+            };
+            /** @description No such photo for this user */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PhotosController_complete_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        /** @enum {string} */
+                        status: "pending" | "uploaded";
+                        contentType: string;
+                        size: number;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        uploadedAt: string | null;
+                        /**
+                         * @description Tagging starts after upload; poll until it is no longer pending
+                         * @enum {string}
+                         */
+                        tagStatus: "pending" | "tagged" | "failed";
+                        /** @description Pre-fill for the wardrobe item; the user corrects it there */
+                        suggestedTags: {
+                            name: string;
+                            /** @enum {string} */
+                            category: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                            colour: string;
+                            /** @enum {string} */
+                            formality: "casual" | "smart" | "formal";
+                            seasons: ("spring" | "summer" | "autumn" | "winter")[];
+                        } | null;
+                    };
+                };
+            };
+            /** @description No such photo for this user */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The file has not arrived yet */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The file differs from the declared size or type */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    WardrobeController_list_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        items: {
+                            /** Format: uuid */
+                            id: string;
+                            name: string;
+                            /** @enum {string} */
+                            category: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                            colour: string;
+                            /** @enum {string} */
+                            formality: "casual" | "smart" | "formal";
+                            seasons: ("spring" | "summer" | "autumn" | "winter")[];
+                            /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                            size: {
+                                /** @enum {string} */
+                                system: "UK" | "EU" | "US" | "INT";
+                                value: string;
+                            } | null;
+                            /**
+                             * Format: uuid
+                             * @description An uploaded photo of yours showing this item
+                             */
+                            photoId: string | null;
+                            /**
+                             * Format: uri
+                             * @description A link to the photo that works for 15 minutes; refetch for a new one
+                             */
+                            photoUrl: string | null;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    WardrobeController_create_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name: string;
+                    /** @enum {string} */
+                    category: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                    colour: string;
+                    /** @enum {string} */
+                    formality: "casual" | "smart" | "formal";
+                    seasons: ("spring" | "summer" | "autumn" | "winter")[];
+                    /**
+                     * @description A size is stored with its system: UK 12, EU 40, INT M
+                     * @default null
+                     */
+                    size?: {
+                        /** @enum {string} */
+                        system: "UK" | "EU" | "US" | "INT";
+                        value: string;
+                    } | null;
+                    /**
+                     * Format: uuid
+                     * @description An uploaded photo of yours showing this item
+                     * @default null
+                     */
+                    photoId?: string | null;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        name: string;
+                        /** @enum {string} */
+                        category: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                        colour: string;
+                        /** @enum {string} */
+                        formality: "casual" | "smart" | "formal";
+                        seasons: ("spring" | "summer" | "autumn" | "winter")[];
+                        /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                        size: {
+                            /** @enum {string} */
+                            system: "UK" | "EU" | "US" | "INT";
+                            value: string;
+                        } | null;
+                        /**
+                         * Format: uuid
+                         * @description An uploaded photo of yours showing this item
+                         */
+                        photoId: string | null;
+                        /**
+                         * Format: uri
+                         * @description A link to the photo that works for 15 minutes; refetch for a new one
+                         */
+                        photoUrl: string | null;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                    };
+                };
+            };
+            /** @description photoId is not an uploaded photo of yours */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    WardrobeController_get_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        name: string;
+                        /** @enum {string} */
+                        category: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                        colour: string;
+                        /** @enum {string} */
+                        formality: "casual" | "smart" | "formal";
+                        seasons: ("spring" | "summer" | "autumn" | "winter")[];
+                        /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                        size: {
+                            /** @enum {string} */
+                            system: "UK" | "EU" | "US" | "INT";
+                            value: string;
+                        } | null;
+                        /**
+                         * Format: uuid
+                         * @description An uploaded photo of yours showing this item
+                         */
+                        photoId: string | null;
+                        /**
+                         * Format: uri
+                         * @description A link to the photo that works for 15 minutes; refetch for a new one
+                         */
+                        photoUrl: string | null;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                    };
+                };
+            };
+            /** @description No such item for this user */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    WardrobeController_remove_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Item deleted */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description No such item for this user */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    WardrobeController_update_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    /** @enum {string} */
+                    category?: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                    colour?: string;
+                    /** @enum {string} */
+                    formality?: "casual" | "smart" | "formal";
+                    seasons?: ("spring" | "summer" | "autumn" | "winter")[];
+                    /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                    size?: {
+                        /** @enum {string} */
+                        system: "UK" | "EU" | "US" | "INT";
+                        value: string;
+                    } | null;
+                    /**
+                     * Format: uuid
+                     * @description An uploaded photo of yours showing this item
+                     */
+                    photoId?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        name: string;
+                        /** @enum {string} */
+                        category: "top" | "bottom" | "dress" | "outerwear" | "shoes" | "accessory";
+                        colour: string;
+                        /** @enum {string} */
+                        formality: "casual" | "smart" | "formal";
+                        seasons: ("spring" | "summer" | "autumn" | "winter")[];
+                        /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                        size: {
+                            /** @enum {string} */
+                            system: "UK" | "EU" | "US" | "INT";
+                            value: string;
+                        } | null;
+                        /**
+                         * Format: uuid
+                         * @description An uploaded photo of yours showing this item
+                         */
+                        photoId: string | null;
+                        /**
+                         * Format: uri
+                         * @description A link to the photo that works for 15 minutes; refetch for a new one
+                         */
+                        photoUrl: string | null;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                    };
+                };
+            };
+            /** @description No such item for this user */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description photoId is not an uploaded photo of yours */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ProfileController_quiz_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        title: string;
+                        intro: string;
+                        questions: ({
+                            /** @enum {string} */
+                            id: "sizes";
+                            /** @enum {string} */
+                            type: "sizes";
+                            question: string;
+                            hint: string;
+                            parts: {
+                                id: string;
+                                label: string;
+                            }[];
+                            systems: {
+                                id: string;
+                                label: string;
+                            }[];
+                        } | {
+                            /** @enum {string} */
+                            id: "fit" | "lifestyle";
+                            /** @enum {string} */
+                            type: "single";
+                            question: string;
+                            options: {
+                                id: string;
+                                label: string;
+                            }[];
+                        } | {
+                            /** @enum {string} */
+                            id: "directions" | "favouriteColours" | "avoidColours" | "neverWear";
+                            /** @enum {string} */
+                            type: "multi";
+                            question: string;
+                            hint: string | null;
+                            max: number;
+                            options: {
+                                id: string;
+                                label: string;
+                            }[];
+                        })[];
+                    };
+                };
+            };
+        };
+    };
+    ProfileController_get_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Null until the quiz is answered */
+                        profile: {
+                            sizes: {
+                                /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                                top: {
+                                    /** @enum {string} */
+                                    system: "UK" | "EU" | "US" | "INT";
+                                    value: string;
+                                } | null;
+                                /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                                bottom: {
+                                    /** @enum {string} */
+                                    system: "UK" | "EU" | "US" | "INT";
+                                    value: string;
+                                } | null;
+                                /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                                shoes: {
+                                    /** @enum {string} */
+                                    system: "UK" | "EU" | "US" | "INT";
+                                    value: string;
+                                } | null;
+                            };
+                            /** @enum {string} */
+                            fit: "fitted" | "regular" | "relaxed";
+                            directions: ("classic" | "minimal" | "smart-casual" | "streetwear" | "romantic" | "bohemian" | "edgy" | "sporty" | "preppy")[];
+                            favouriteColours: ("neutrals" | "earth-tones" | "blues" | "pastels" | "brights" | "jewel-tones")[];
+                            avoidColours: ("neutrals" | "earth-tones" | "blues" | "pastels" | "brights" | "jewel-tones")[];
+                            /** @enum {string} */
+                            lifestyle: "office" | "smart-casual-work" | "casual" | "active" | "mixed";
+                            neverWear: ("high-necklines" | "sleeveless" | "short-hemlines" | "skinny-fits" | "heels" | "logos" | "bold-patterns")[];
+                            /** Format: date-time */
+                            updatedAt: string;
+                        } | null;
+                        /** @description Feedback the person gave on suggested outfits */
+                        feedback: {
+                            liked: number;
+                            disliked: number;
+                            worn: number;
+                            recent: {
+                                /** Format: uuid */
+                                outfitId: string;
+                                /** @description Occasion name, if one was known */
+                                occasion: string | null;
+                                items: string[];
+                                /** @enum {string|null} */
+                                rating: "like" | "dislike" | null;
+                                worn: boolean;
+                                note: string | null;
+                                /** Format: date-time */
+                                feedbackAt: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    ProfileController_save_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    sizes: {
+                        /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                        top: {
+                            /** @enum {string} */
+                            system: "UK" | "EU" | "US" | "INT";
+                            value: string;
+                        } | null;
+                        /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                        bottom: {
+                            /** @enum {string} */
+                            system: "UK" | "EU" | "US" | "INT";
+                            value: string;
+                        } | null;
+                        /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                        shoes: {
+                            /** @enum {string} */
+                            system: "UK" | "EU" | "US" | "INT";
+                            value: string;
+                        } | null;
+                    };
+                    /** @enum {string} */
+                    fit: "fitted" | "regular" | "relaxed";
+                    directions: ("classic" | "minimal" | "smart-casual" | "streetwear" | "romantic" | "bohemian" | "edgy" | "sporty" | "preppy")[];
+                    favouriteColours: ("neutrals" | "earth-tones" | "blues" | "pastels" | "brights" | "jewel-tones")[];
+                    avoidColours: ("neutrals" | "earth-tones" | "blues" | "pastels" | "brights" | "jewel-tones")[];
+                    /** @enum {string} */
+                    lifestyle: "office" | "smart-casual-work" | "casual" | "active" | "mixed";
+                    neverWear: ("high-necklines" | "sleeveless" | "short-hemlines" | "skinny-fits" | "heels" | "logos" | "bold-patterns")[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @description Null until the quiz is answered */
+                        profile: {
+                            sizes: {
+                                /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                                top: {
+                                    /** @enum {string} */
+                                    system: "UK" | "EU" | "US" | "INT";
+                                    value: string;
+                                } | null;
+                                /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                                bottom: {
+                                    /** @enum {string} */
+                                    system: "UK" | "EU" | "US" | "INT";
+                                    value: string;
+                                } | null;
+                                /** @description A size is stored with its system: UK 12, EU 40, INT M */
+                                shoes: {
+                                    /** @enum {string} */
+                                    system: "UK" | "EU" | "US" | "INT";
+                                    value: string;
+                                } | null;
+                            };
+                            /** @enum {string} */
+                            fit: "fitted" | "regular" | "relaxed";
+                            directions: ("classic" | "minimal" | "smart-casual" | "streetwear" | "romantic" | "bohemian" | "edgy" | "sporty" | "preppy")[];
+                            favouriteColours: ("neutrals" | "earth-tones" | "blues" | "pastels" | "brights" | "jewel-tones")[];
+                            avoidColours: ("neutrals" | "earth-tones" | "blues" | "pastels" | "brights" | "jewel-tones")[];
+                            /** @enum {string} */
+                            lifestyle: "office" | "smart-casual-work" | "casual" | "active" | "mixed";
+                            neverWear: ("high-necklines" | "sleeveless" | "short-hemlines" | "skinny-fits" | "heels" | "logos" | "bold-patterns")[];
+                            /** Format: date-time */
+                            updatedAt: string;
+                        } | null;
+                        /** @description Feedback the person gave on suggested outfits */
+                        feedback: {
+                            liked: number;
+                            disliked: number;
+                            worn: number;
+                            recent: {
+                                /** Format: uuid */
+                                outfitId: string;
+                                /** @description Occasion name, if one was known */
+                                occasion: string | null;
+                                items: string[];
+                                /** @enum {string|null} */
+                                rating: "like" | "dislike" | null;
+                                worn: boolean;
+                                note: string | null;
+                                /** Format: date-time */
+                                feedbackAt: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    OutfitsController_feedback_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /**
+                     * @description null clears an earlier like or dislike
+                     * @enum {string|null}
+                     */
+                    rating?: "like" | "dislike" | null;
+                    worn?: boolean;
+                    note?: string | null;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id: string;
+                        occasionId: string | null;
+                        items: {
+                            itemId: string;
+                            name: string;
+                        }[];
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** @enum {string|null} */
+                        rating: "like" | "dislike" | null;
+                        worn: boolean;
+                        note: string | null;
+                        /** Format: date-time */
+                        feedbackAt: string | null;
+                    };
+                };
+            };
+            /** @description No such outfit for this user */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    StylistController_chat_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    messages: {
+                        /** @enum {string} */
+                        role: "user" | "assistant";
+                        content: string;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            /** @description SSE stream of step, outfit, token, done and error events */
             200: {
                 headers: {
                     [name: string]: unknown;

@@ -1,12 +1,41 @@
 /** Every user-facing string lives here, so other locales can be added later. */
 export const en = {
-  appName: 'Capsule fitting room',
-  appPurpose:
-    'A test chat for seeing how the stylist model answers, what it understands and how it uses its tools.',
+  appName: 'Capsule',
+  appPurpose: 'Your stylist, starting from the clothes you already own.',
+
+  common: {
+    retry: 'Try again',
+  },
+
+  shell: {
+    signOut: 'Sign out',
+    tabsLabel: 'Sections',
+    tabs: {
+      wardrobe: 'Wardrobe',
+      fittingRoom: 'Fitting room',
+    },
+  },
+
+  wardrobe: {
+    title: 'Your wardrobe',
+    gridLabel: 'Your clothes',
+    loading: 'Loading your wardrobe…',
+    loadFailed: 'Your wardrobe could not be loaded.',
+    emptyTitle: 'Nothing here yet',
+    emptyBody: 'Photograph a piece you own and it will appear here.',
+    categories: {
+      top: 'Top',
+      bottom: 'Bottom',
+      dress: 'Dress',
+      outerwear: 'Outerwear',
+      shoes: 'Shoes',
+      accessory: 'Accessory',
+    },
+  },
 
   auth: {
-    signInTitle: 'Sign in to the fitting room',
-    registerTitle: 'Create a test account',
+    signInTitle: 'Sign in to Capsule',
+    registerTitle: 'Create your account',
     email: 'Email',
     password: 'Password',
     passwordHint: 'At least 10 characters.',
@@ -19,6 +48,7 @@ export const en = {
   },
 
   chat: {
+    title: 'Fitting room',
     emptyTitle: 'Ask the stylist something',
     emptyBody: 'Each of these makes the model reach for a different tool.',
     samples: [

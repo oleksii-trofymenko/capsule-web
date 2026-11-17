@@ -17,6 +17,8 @@ export type Me = Json<'/v1/auth/me', 'get'>;
 export type ModelsStatus = Json<'/v1/models', 'get'>;
 export type Credentials = paths['/v1/auth/login']['post']['requestBody']['content']['application/json'];
 export type ChatRequest = paths['/v1/playground/chat']['post']['requestBody']['content']['application/json'];
+export type WardrobeList = Json<'/v1/wardrobe/items', 'get'>;
+export type WardrobeItem = WardrobeList['items'][number];
 
 export class ApiError extends Error {
   readonly status: number;
@@ -74,4 +76,6 @@ export const api = {
   },
   me: async (token: string) => (await (await request('/v1/auth/me', { token })).json()) as Me,
   models: async (token: string) => (await (await request('/v1/models', { token })).json()) as ModelsStatus,
+  wardrobe: async (token: string) =>
+    (await (await request('/v1/wardrobe/items', { token })).json()) as WardrobeList,
 };

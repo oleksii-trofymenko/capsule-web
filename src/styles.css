@@ -640,3 +640,133 @@ textarea {
     animation: none;
   }
 }
+
+/* App shell: header, screen, and tabs along the bottom where a thumb reaches. */
+.shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.shell-brand {
+  font-weight: 700;
+  font-size: var(--step-1);
+  color: var(--indigo);
+}
+
+.shell-user {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--thread);
+  font-size: var(--step--1);
+}
+
+.shell-main {
+  flex: 1;
+  width: 100%;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 1rem 1rem 5.5rem;
+}
+
+.shell-tabs {
+  position: fixed;
+  inset: auto 0 0 0;
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.shell-tab {
+  flex: 1;
+  min-height: 3.5rem;
+  border: 0;
+  background: none;
+  color: var(--thread);
+  font: inherit;
+  font-weight: 600;
+}
+
+.shell-tab[aria-current='page'] {
+  color: var(--indigo);
+  box-shadow: inset 0 3px 0 var(--indigo);
+}
+
+.shell-tab:focus-visible {
+  outline: 3px solid var(--indigo);
+  outline-offset: -3px;
+}
+
+/* Screens */
+.screen-title {
+  font-size: var(--step-2);
+  margin-bottom: 1rem;
+}
+
+.status {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  padding: 1.5rem 0;
+  color: var(--thread);
+}
+
+.status-title {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: var(--step-1);
+}
+
+/* Wardrobe grid: two columns on a phone, more on wider screens. */
+.wardrobe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+}
+
+.wardrobe-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.wardrobe-photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: var(--paper);
+}
+
+.wardrobe-photo-none {
+  display: grid;
+  place-items: center;
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--thread);
+}
+
+.wardrobe-name {
+  font-size: var(--step-0);
+  padding: 0.5rem 0.75rem 0;
+}
+
+.wardrobe-meta {
+  font-size: var(--step--1);
+  color: var(--thread);
+  padding: 0 0.75rem 0.75rem;
+}
