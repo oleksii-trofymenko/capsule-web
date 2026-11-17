@@ -926,3 +926,94 @@ textarea {
 .feedback-note {
   font-style: italic;
 }
+
+/* Stylist */
+.samples {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.samples .button {
+  text-align: left;
+}
+
+.stylist-turns {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.turn-user {
+  justify-self: end;
+  max-width: 85%;
+  background: var(--indigo);
+  color: #fff;
+  border-radius: 1rem 1rem 0.25rem 1rem;
+  padding: 0.6rem 0.9rem;
+}
+
+.turn-stylist {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.turn-text {
+  white-space: pre-wrap;
+}
+
+.outfit-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.outfit-items {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.outfit-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.outfit-photo {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--paper);
+}
+
+.outfit-photo-none {
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--thread);
+}
+
+.outfit-feedback {
+  display: grid;
+  gap: 0.5rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.75rem;
+}
+
+.outfit-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.button[aria-pressed='true'] {
+  background: var(--indigo);
+  color: #fff;
+  border-color: var(--indigo);
+}

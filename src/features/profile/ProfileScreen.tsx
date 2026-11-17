@@ -4,9 +4,8 @@ import { api, isNetworkError, type ProfileAnswers, type Quiz } from '../../api/c
 import { en } from '../../strings/en';
 import { useAuthedCall } from '../auth/SessionContext';
 import { FeedbackSummary } from './FeedbackSummary';
+import { profileKey } from './queries';
 import { QuizForm } from './QuizForm';
-
-export const profileKey = ['profile'] as const;
 
 /** Each answer in words, using the labels the API's quiz gives its options. */
 function describe(quiz: Quiz, answers: ProfileAnswers): { question: string; answer: string }[] {

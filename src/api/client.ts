@@ -26,6 +26,9 @@ export type Photo = Json<'/v1/photos/{id}', 'get'>;
 export type Quiz = Json<'/v1/profile/quiz', 'get'>;
 export type ProfileView = Json<'/v1/profile', 'get'>;
 export type ProfileAnswers = paths['/v1/profile']['put']['requestBody']['content']['application/json'];
+export type OutfitFeedback =
+  paths['/v1/outfits/{id}/feedback']['patch']['requestBody']['content']['application/json'];
+export type RatedOutfit = Json<'/v1/outfits/{id}/feedback', 'patch'>;
 
 /** Sends the file straight to storage at the presigned URL. The API never receives it. */
 export async function uploadPhoto(upload: PhotoUpload['upload'], file: Blob): Promise<void> {
@@ -106,6 +109,10 @@ export const api = {
     (await (await request(`/v1/photos/${id}`, { token })).json()) as Photo,
   quiz: async (token: string) => (await (await request('/v1/profile/quiz', { token })).json()) as Quiz,
   profile: async (token: string) => (await (await request('/v1/profile', { token })).json()) as ProfileView,
+  rateOutfit: async (token: string, id: string, feedback: OutfitFeedback) =>
+    (await (
+      await request(`/v1/outfits/${id}/feedback`, { method: 'PATCH', body: JSON.stringify(feedback), token })
+    ).json()) as RatedOutfit,
   saveProfile: async (token: string, answers: ProfileAnswers) =>
     (await (
       await request('/v1/profile', { method: 'PUT', body: JSON.stringify(answers), token })
