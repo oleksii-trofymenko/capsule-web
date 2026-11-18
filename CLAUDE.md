@@ -4,8 +4,9 @@ Web client for Capsule. Read `../CLAUDE.md` first: the product description, goal
 workflow, coding rules and secrets rules there all apply here. This file only adds frontend
 specifics.
 
-Status: scaffolded with one screen set, the fitting room: a developer test chat against
-`POST /v1/playground/chat`. The product screens (wardrobe, quiz, outfits) are not built yet.
+Status: the product app is being built screen by screen (T13): sign in and the wardrobe grid so
+far, behind bottom tabs. The fitting room, a developer test chat against
+`POST /v1/playground/chat`, is a tab in development builds only.
 
 ## Commands
 
@@ -24,13 +25,15 @@ business rules, so the Expo app can reuse the same backend unchanged.
 
 ## Stack
 
-In use: React 19 · TypeScript (strict) · Vite · Vitest + Testing Library · oxlint · Prettier ·
-API types generated from `../capsule-api/openapi.json` into `src/api/schema.d.ts`.
+In use: React 19 · TypeScript (strict) · Vite · TanStack Query (the server-data cache) ·
+Vitest + Testing Library · oxlint · Prettier · API types generated from
+`../capsule-api/openapi.json` into `src/api/schema.d.ts`.
 
-Planned, add only when a task needs it: React Router, TanStack Query, Playwright.
+Planned, add only when a task needs it: React Router, Playwright. Screens switch with tab state
+for now: there are no deep links to support yet.
 
-The fitting room is deliberately small and has no router or query library. Server-Sent Events are
-read with `fetch` in `src/api/chat.ts`, because the chat endpoint is a streaming POST.
+Server-Sent Events are read with `fetch` in `src/api/chat.ts`, because chat endpoints are
+streaming POSTs. Signed-in screens get authenticated calls from `useAuthedCall()`.
 
 ## Rules
 

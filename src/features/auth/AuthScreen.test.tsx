@@ -23,7 +23,7 @@ describe('AuthScreen', () => {
     render(<AuthScreen onSignedIn={onSignedIn} />);
 
     await userEvent.click(screen.getByRole('button', { name: 'No account yet? Create one' }));
-    expect(screen.getByRole('heading', { name: 'Create a test account' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Create your account' })).toBeInTheDocument();
     expect(screen.getByText('At least 10 characters.')).toBeInTheDocument();
 
     await userEvent.type(screen.getByLabelText('Email'), 'ana@example.com');
