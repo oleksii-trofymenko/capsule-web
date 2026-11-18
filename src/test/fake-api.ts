@@ -1,5 +1,4 @@
 import { vi } from 'vitest';
-import type { ChatEvent } from '../api/chat';
 
 export const tokens = {
   accessToken: 'access-1',
@@ -12,7 +11,7 @@ export const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
 /** An SSE response delivered in deliberately awkward chunks, like a real network. */
-export function sse(events: ChatEvent[], chunkSize = 17): Response {
+export function sse<E extends { type: string }>(events: E[], chunkSize = 17): Response {
   const text = events
     .map(({ type, ...data }) => `event: ${type}\ndata: ${JSON.stringify(data)}\n\n`)
     .join('');

@@ -12,6 +12,7 @@ export const en = {
     tabsLabel: 'Sections',
     tabs: {
       wardrobe: 'Wardrobe',
+      stylist: 'Stylist',
       profile: 'Profile',
       fittingRoom: 'Fitting room',
     },
@@ -44,6 +45,46 @@ export const en = {
       shoes: 'Shoes',
       accessory: 'Accessory',
     },
+  },
+
+  stylist: {
+    title: 'Stylist',
+    emptyTitle: 'Ask for an outfit',
+    emptyBody: 'Tell Capsule where you are going. It builds from the clothes you own.',
+    samples: [
+      'What should I wear to a wedding on Saturday?',
+      'Something for a first date at a wine bar?',
+      'Which shoes go with my beige chinos?',
+    ],
+    steps: {
+      'load-context': 'Getting your wardrobe…',
+      understand: 'Reading your message…',
+      clarify: 'Thinking of a question…',
+      'retrieve-wardrobe': 'Looking through your clothes…',
+      compose: 'Putting an outfit together…',
+      'check-rules': 'Checking the dress code…',
+      write: 'Writing…',
+      answer: 'Thinking it through…',
+    } as Record<string, string>,
+    working: 'Working…',
+    stopped: 'Stopped.',
+    failed: 'The stylist could not answer. Try again.',
+    you: 'You',
+    capsule: 'Capsule',
+  },
+
+  outfit: {
+    title: 'Your outfit',
+    missing: 'Missing:',
+    removed: (name: string, reason: string) => `Left out ${name}: ${reason}`,
+    like: 'Like',
+    dislike: 'Dislike',
+    worn: 'I wore it',
+    note: 'Note for Capsule',
+    saveNote: 'Save note',
+    saved: 'Thanks, noted.',
+    saveFailed: 'Your feedback could not be saved.',
+    feedbackLabel: 'Your feedback on this outfit',
   },
 
   profile: {
