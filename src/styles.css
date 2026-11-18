@@ -927,6 +927,17 @@ textarea {
   font-style: italic;
 }
 
+.note-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.note-text {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+
 /* Stylist */
 .samples {
   display: grid;

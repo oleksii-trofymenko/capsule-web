@@ -72,4 +72,22 @@ test('the whole loop works in a phone browser', async ({ page, request }) => {
   await page.getByRole('button', { name: 'Profile' }).click();
   await expect(page.getByText(/^Liked 1 · Disliked 0/)).toBeVisible();
   await expect(page.getByText('Office')).toBeVisible();
+
+  // A dislike told to the stylist is remembered, shown, and can be forgotten.
+  await page.getByRole('button', { name: 'Stylist' }).click();
+  await page.getByLabel('Message the stylist').fill('By the way, I never wear yellow.');
+  await page.getByRole('button', { name: 'Send' }).click();
+  // The note is saved while the reply streams; wait for it before opening the profile.
+  await expect
+    .poll(async () => {
+      const res = await request.get(`${api}/memory`, { headers: { Authorization: `Bearer ${accessToken}` } });
+      const { notes } = (await res.json()) as { notes: { text: string }[] };
+      return notes.map((n) => n.text).join(' ');
+    })
+    .toMatch(/yellow/i);
+  await page.getByRole('button', { name: 'Profile' }).click();
+  const memory = page.getByRole('region', { name: 'What Capsule knows about you' });
+  await expect(memory.getByText(/yellow/i)).toBeVisible();
+  await memory.getByRole('button', { name: /^Forget ".*yellow.*"$/i }).click();
+  await expect(memory.getByText(/yellow/i)).toHaveCount(0);
 });

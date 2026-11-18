@@ -4,6 +4,7 @@ import { api, isNetworkError, type ProfileAnswers, type Quiz } from '../../api/c
 import { en } from '../../strings/en';
 import { useAuthedCall } from '../auth/SessionContext';
 import { FeedbackSummary } from './FeedbackSummary';
+import { MemoryNotes } from './MemoryNotes';
 import { profileKey } from './queries';
 import { QuizForm } from './QuizForm';
 
@@ -75,6 +76,8 @@ export function ProfileScreen() {
           onSave={(next) => save.mutate(next)}
           onCancel={answers ? () => setEditing(false) : undefined}
         />
+        {/* The stylist can be used before the quiz; what it remembers must still be visible. */}
+        {!answers && <MemoryNotes />}
       </section>
     );
   }
@@ -98,6 +101,7 @@ export function ProfileScreen() {
         ))}
       </dl>
       <FeedbackSummary feedback={profile.data.feedback} />
+      <MemoryNotes />
     </section>
   );
 }

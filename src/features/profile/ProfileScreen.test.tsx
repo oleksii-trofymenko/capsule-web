@@ -1,6 +1,6 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ProfileAnswers, ProfileView, Quiz } from '../../api/client';
+import type { Memory, Note, ProfileAnswers, ProfileView, Quiz } from '../../api/client';
 import { json, mockApi, type Call } from '../../test/fake-api';
 import { renderSignedIn } from '../../test/render-signed-in';
 import { ProfileScreen } from './ProfileScreen';
@@ -98,9 +98,24 @@ const answers = {
 
 const noFeedback: ProfileView['feedback'] = { liked: 0, disliked: 0, worn: 0, recent: [] };
 
-function api(view: ProfileView, saveStatus = 200) {
+function api(view: ProfileView, saveStatus = 200, notes: Note[] = []) {
   let current = view;
+  let remembered = notes;
   return mockApi({
+    'GET /v1/memory': () => json({ notes: remembered } satisfies Memory),
+    'DELETE /v1/memory': () => {
+      remembered = [];
+      return new Response(null, { status: 204 });
+    },
+    ...Object.fromEntries(
+      notes.map((n) => [
+        `DELETE /v1/memory/${n.id}`,
+        () => {
+          remembered = remembered.filter((r) => r.id !== n.id);
+          return new Response(null, { status: 204 });
+        },
+      ]),
+    ),
     'GET /v1/profile/quiz': () => json(quiz),
     'GET /v1/profile': () => json(current),
     'PUT /v1/profile': ({ body }: Call) => {
@@ -115,6 +130,23 @@ function api(view: ProfileView, saveStatus = 200) {
 }
 
 describe('ProfileScreen', () => {
+  it('shows what Capsule remembers even before the quiz is answered', async () => {
+    api({ profile: null, feedback: noFeedback }, 200, [
+      {
+        id: '11111111-1111-4111-8111-111111111111',
+        kind: 'dislike',
+        text: 'yellow',
+        createdAt: '2026-11-18T10:00:00.000Z',
+      },
+    ]);
+    renderSignedIn(<ProfileScreen />);
+
+    expect(await screen.findByRole('heading', { name: 'Your style in two minutes' })).toBeInTheDocument();
+    const memory = screen.getByRole('region', { name: 'What Capsule knows about you' });
+    expect(await within(memory).findByText('yellow')).toBeInTheDocument();
+    expect(within(memory).getByRole('button', { name: 'Forget "yellow"' })).toBeInTheDocument();
+  });
+
   it('asks the quiz first, sends the answers in the API shape, then shows them in words', async () => {
     const calls = api({ profile: null, feedback: noFeedback });
     renderSignedIn(<ProfileScreen />);
@@ -198,6 +230,48 @@ describe('ProfileScreen', () => {
     await user.click(screen.getByLabelText('A formal workplace'));
     await user.click(screen.getByRole('button', { name: 'Save my answers' }));
     expect(await screen.findByRole('alert')).toHaveTextContent('Your answers could not be saved.');
+  });
+
+  it('shows what Capsule remembers and forgets one note, then everything', async () => {
+    const notes: Note[] = [
+      {
+        id: '11111111-1111-4111-8111-111111111111',
+        kind: 'dislike',
+        text: 'navy',
+        createdAt: '2026-11-18T10:00:00.000Z',
+      },
+      {
+        id: '22222222-2222-4222-8222-222222222222',
+        kind: 'like',
+        text: 'green',
+        createdAt: '2026-11-18T09:00:00.000Z',
+      },
+    ];
+    const calls = api(
+      { profile: { ...answers, updatedAt: '2026-11-17T12:00:00.000Z' }, feedback: noFeedback },
+      200,
+      notes,
+    );
+    renderSignedIn(<ProfileScreen />);
+    const user = userEvent.setup();
+
+    const memory = await screen.findByRole('region', { name: 'What Capsule knows about you' });
+    expect(await within(memory).findByText('navy')).toBeInTheDocument();
+    expect(within(memory).getByText('Dislikes')).toBeInTheDocument();
+
+    await user.click(within(memory).getByRole('button', { name: 'Forget "navy"' }));
+    await waitFor(() => expect(within(memory).queryByText('navy')).not.toBeInTheDocument());
+    expect(within(memory).getByText('green')).toBeInTheDocument();
+
+    await user.click(within(memory).getByRole('button', { name: 'Forget everything' }));
+    await user.click(within(memory).getByRole('button', { name: 'Yes, forget it all' }));
+    expect(
+      await within(memory).findByText(/Nothing yet. Tell the stylist what you love or never wear/),
+    ).toBeInTheDocument();
+    expect(calls.filter((c) => c.method === 'DELETE').map((c) => c.path)).toEqual([
+      `/v1/memory/${notes[0].id}`,
+      '/v1/memory',
+    ]);
   });
 
   it('shows an error with a way to try again', async () => {

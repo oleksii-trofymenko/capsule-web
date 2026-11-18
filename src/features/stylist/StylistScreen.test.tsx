@@ -1,9 +1,10 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { WardrobeItem } from '../../api/client';
+import type { Memory, WardrobeItem } from '../../api/client';
 import type { StylistEvent } from '../../api/stylist';
 import { json, mockApi, sse, type Call } from '../../test/fake-api';
 import { renderSignedIn } from '../../test/render-signed-in';
+import { MemoryNotes } from '../profile/MemoryNotes';
 import { StylistScreen } from './StylistScreen';
 
 const blazer: WardrobeItem = {
@@ -77,6 +78,36 @@ describe('StylistScreen', () => {
     expect(calls.find((c) => c.path === '/v1/stylist/chat')?.body).toEqual({
       messages: [{ role: 'user', content: 'What should I wear to a wedding on Saturday?' }],
     });
+  });
+
+  it('refreshes what Capsule remembers once a reply has finished', async () => {
+    let chatted = false;
+    mockApi({
+      'GET /v1/wardrobe/items': () => json({ items: [blazer] }),
+      'GET /v1/memory': () =>
+        json({
+          notes: chatted
+            ? [{ id: 'note-1', kind: 'dislike', text: 'yellow', createdAt: '2026-11-18T10:00:00.000Z' }]
+            : [],
+        } satisfies Memory),
+      'POST /v1/stylist/chat': () => {
+        chatted = true;
+        return sse(outfitReply);
+      },
+    });
+    renderSignedIn(
+      <>
+        <StylistScreen />
+        <MemoryNotes />
+      </>,
+    );
+    const user = userEvent.setup();
+    expect(await screen.findByText(/Nothing yet/)).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText('Message the stylist'), 'I never wear yellow.');
+    await user.click(screen.getByRole('button', { name: 'Send' }));
+
+    expect(await screen.findByText('yellow')).toBeInTheDocument();
   });
 
   it('records a like, clears it, and saves a note on the outfit', async () => {

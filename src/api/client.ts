@@ -29,6 +29,8 @@ export type ProfileAnswers = paths['/v1/profile']['put']['requestBody']['content
 export type OutfitFeedback =
   paths['/v1/outfits/{id}/feedback']['patch']['requestBody']['content']['application/json'];
 export type RatedOutfit = Json<'/v1/outfits/{id}/feedback', 'patch'>;
+export type Memory = Json<'/v1/memory', 'get'>;
+export type Note = Memory['notes'][number];
 
 /** Sends the file straight to storage at the presigned URL. The API never receives it. */
 export async function uploadPhoto(upload: PhotoUpload['upload'], file: Blob): Promise<void> {
@@ -113,6 +115,13 @@ export const api = {
     (await (
       await request(`/v1/outfits/${id}/feedback`, { method: 'PATCH', body: JSON.stringify(feedback), token })
     ).json()) as RatedOutfit,
+  memory: async (token: string) => (await (await request('/v1/memory', { token })).json()) as Memory,
+  forgetNote: async (token: string, id: string) => {
+    await request(`/v1/memory/${id}`, { method: 'DELETE', token });
+  },
+  forgetAll: async (token: string) => {
+    await request('/v1/memory', { method: 'DELETE', token });
+  },
   saveProfile: async (token: string, answers: ProfileAnswers) =>
     (await (
       await request('/v1/profile', { method: 'PUT', body: JSON.stringify(answers), token })

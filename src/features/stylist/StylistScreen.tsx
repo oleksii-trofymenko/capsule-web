@@ -1,5 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useReducer, useRef } from 'react';
 import { streamStylist } from '../../api/stylist';
+import { memoryKey } from '../profile/queries';
 import { en } from '../../strings/en';
 import { Composer } from '../chat/Composer';
 import { useAuthedCall } from '../auth/SessionContext';
@@ -12,6 +14,7 @@ const newId = () => crypto.randomUUID();
 export function StylistScreen() {
   const t = en.stylist;
   const call = useAuthedCall();
+  const queryClient = useQueryClient();
   const [state, dispatch] = useReducer(stylistReducer, initialStylistState);
   const abort = useRef<AbortController | null>(null);
   const bottom = useRef<HTMLDivElement>(null);
@@ -39,6 +42,9 @@ export function StylistScreen() {
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return;
       dispatch({ type: 'failed', message: t.failed });
+    } finally {
+      // The stylist may have remembered something the person said.
+      void queryClient.invalidateQueries({ queryKey: memoryKey });
     }
   }
 
