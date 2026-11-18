@@ -76,6 +76,8 @@ export function ProfileScreen() {
           onSave={(next) => save.mutate(next)}
           onCancel={answers ? () => setEditing(false) : undefined}
         />
+        {/* The stylist can be used before the quiz; what it remembers must still be visible. */}
+        {!answers && <MemoryNotes />}
       </section>
     );
   }

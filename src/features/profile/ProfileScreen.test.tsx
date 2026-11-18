@@ -130,6 +130,23 @@ function api(view: ProfileView, saveStatus = 200, notes: Note[] = []) {
 }
 
 describe('ProfileScreen', () => {
+  it('shows what Capsule remembers even before the quiz is answered', async () => {
+    api({ profile: null, feedback: noFeedback }, 200, [
+      {
+        id: '11111111-1111-4111-8111-111111111111',
+        kind: 'dislike',
+        text: 'yellow',
+        createdAt: '2026-11-18T10:00:00.000Z',
+      },
+    ]);
+    renderSignedIn(<ProfileScreen />);
+
+    expect(await screen.findByRole('heading', { name: 'Your style in two minutes' })).toBeInTheDocument();
+    const memory = screen.getByRole('region', { name: 'What Capsule knows about you' });
+    expect(await within(memory).findByText('yellow')).toBeInTheDocument();
+    expect(within(memory).getByRole('button', { name: 'Forget "yellow"' })).toBeInTheDocument();
+  });
+
   it('asks the quiz first, sends the answers in the API shape, then shows them in words', async () => {
     const calls = api({ profile: null, feedback: noFeedback });
     renderSignedIn(<ProfileScreen />);
