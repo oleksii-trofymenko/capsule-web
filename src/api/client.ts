@@ -19,6 +19,27 @@ export type Credentials = paths['/v1/auth/login']['post']['requestBody']['conten
 export type ChatRequest = paths['/v1/playground/chat']['post']['requestBody']['content']['application/json'];
 export type WardrobeList = Json<'/v1/wardrobe/items', 'get'>;
 export type WardrobeItem = WardrobeList['items'][number];
+export type NewItem = paths['/v1/wardrobe/items']['post']['requestBody']['content']['application/json'];
+export type NewPhoto = paths['/v1/photos']['post']['requestBody']['content']['application/json'];
+export type PhotoUpload = Json<'/v1/photos', 'post'>;
+export type Photo = Json<'/v1/photos/{id}', 'get'>;
+export type Quiz = Json<'/v1/profile/quiz', 'get'>;
+export type ProfileView = Json<'/v1/profile', 'get'>;
+export type ProfileAnswers = paths['/v1/profile']['put']['requestBody']['content']['application/json'];
+export type OutfitFeedback =
+  paths['/v1/outfits/{id}/feedback']['patch']['requestBody']['content']['application/json'];
+export type RatedOutfit = Json<'/v1/outfits/{id}/feedback', 'patch'>;
+
+/** Sends the file straight to storage at the presigned URL. The API never receives it. */
+export async function uploadPhoto(upload: PhotoUpload['upload'], file: Blob): Promise<void> {
+  let res: Response;
+  try {
+    res = await fetch(upload.url, { method: upload.method, headers: upload.headers, body: file });
+  } catch {
+    throw new ApiError(0, 'network');
+  }
+  if (!res.ok) throw new ApiError(res.status, res.statusText);
+}
 
 export class ApiError extends Error {
   readonly status: number;
@@ -78,4 +99,22 @@ export const api = {
   models: async (token: string) => (await (await request('/v1/models', { token })).json()) as ModelsStatus,
   wardrobe: async (token: string) =>
     (await (await request('/v1/wardrobe/items', { token })).json()) as WardrobeList,
+  createItem: async (token: string, item: NewItem) =>
+    (await (await post('/v1/wardrobe/items', item, token)).json()) as WardrobeItem,
+  startUpload: async (token: string, photo: NewPhoto) =>
+    (await (await post('/v1/photos', photo, token)).json()) as PhotoUpload,
+  completeUpload: async (token: string, id: string) =>
+    (await (await request(`/v1/photos/${id}/complete`, { method: 'POST', token })).json()) as Photo,
+  photo: async (token: string, id: string) =>
+    (await (await request(`/v1/photos/${id}`, { token })).json()) as Photo,
+  quiz: async (token: string) => (await (await request('/v1/profile/quiz', { token })).json()) as Quiz,
+  profile: async (token: string) => (await (await request('/v1/profile', { token })).json()) as ProfileView,
+  rateOutfit: async (token: string, id: string, feedback: OutfitFeedback) =>
+    (await (
+      await request(`/v1/outfits/${id}/feedback`, { method: 'PATCH', body: JSON.stringify(feedback), token })
+    ).json()) as RatedOutfit,
+  saveProfile: async (token: string, answers: ProfileAnswers) =>
+    (await (
+      await request('/v1/profile', { method: 'PUT', body: JSON.stringify(answers), token })
+    ).json()) as ProfileView,
 };

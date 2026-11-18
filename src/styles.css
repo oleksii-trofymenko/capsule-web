@@ -770,3 +770,250 @@ textarea {
   color: var(--thread);
   padding: 0 0.75rem 0.75rem;
 }
+
+.screen-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.screen-head .screen-title {
+  margin-bottom: 0;
+}
+
+/* Adding an item */
+.add-pick {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: start;
+}
+
+.file-button {
+  cursor: pointer;
+}
+
+.file-button:focus-within {
+  outline: 3px solid var(--indigo);
+  outline-offset: 2px;
+}
+
+.add-preview {
+  display: block;
+  width: 100%;
+  max-height: 22rem;
+  object-fit: contain;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.item-form {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.field select {
+  font: inherit;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.5rem;
+  background: var(--surface);
+}
+
+.choices {
+  border: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.choices legend {
+  padding: 0;
+  margin-bottom: 0.25rem;
+}
+
+.choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Profile and quiz */
+.quiz {
+  display: grid;
+  gap: 1rem;
+}
+
+.question {
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  padding: 0.75rem 1rem 1rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.question legend {
+  font-weight: 700;
+  padding: 0 0.25rem;
+}
+
+.size-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.profile-block {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.profile-answers dt {
+  font-size: var(--step--1);
+  color: var(--thread);
+}
+
+.profile-answers dd {
+  margin: 0 0 0.5rem;
+}
+
+.feedback-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.feedback-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tag {
+  font-size: var(--step--1);
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+
+.feedback-note {
+  font-style: italic;
+}
+
+/* Stylist */
+.samples {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.samples .button {
+  text-align: left;
+}
+
+.stylist-turns {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.turn-user {
+  justify-self: end;
+  max-width: 85%;
+  background: var(--indigo);
+  color: #fff;
+  border-radius: 1rem 1rem 0.25rem 1rem;
+  padding: 0.6rem 0.9rem;
+}
+
+.turn-stylist {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.turn-text {
+  white-space: pre-wrap;
+}
+
+.outfit-card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.outfit-items {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.outfit-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.outfit-photo {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--paper);
+}
+
+.outfit-photo-none {
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--thread);
+}
+
+.outfit-feedback {
+  display: grid;
+  gap: 0.5rem;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.75rem;
+}
+
+.outfit-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.button[aria-pressed='true'] {
+  background: var(--indigo);
+  color: #fff;
+  border-color: var(--indigo);
+}
