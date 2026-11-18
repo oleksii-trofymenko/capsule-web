@@ -38,6 +38,16 @@ The three sample questions on the empty screen each lead the model to a differen
 | `npm run check` | Everything CI runs: format, lint, typecheck, tests, build |
 | `npm test` | Unit and component tests |
 | `npm run api:types` | Regenerate `src/api/schema.d.ts` from `../capsule-api/openapi.json` |
+| `npm run e2e` | The thin path in a phone browser, against the real stack (below) |
+
+### End-to-end
+
+`npm run e2e` runs `e2e/thin-path.e2e.ts` in Chromium with a Pixel 7 profile: sign up, answer the
+quiz, upload a photo and wait for its tags, ask the stylist, rate the outfit, see the feedback.
+Playwright builds and starts `../capsule-api` on port 3100 and this app on 5174, and stops both
+afterwards. It needs what `npm run setup` in capsule-api starts (Postgres, SeaweedFS), Ollama with
+the configured models, and the photo bucket allowing uploads from `http://localhost:5174`. It is
+not part of `npm run check`, because CI has no stack. First time: `npx playwright install chromium`.
 
 ## Layout
 
