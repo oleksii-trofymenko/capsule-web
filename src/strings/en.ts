@@ -12,6 +12,7 @@ export const en = {
     tabsLabel: 'Sections',
     tabs: {
       wardrobe: 'Wardrobe',
+      profile: 'Profile',
       fittingRoom: 'Fitting room',
     },
   },
@@ -43,6 +44,31 @@ export const en = {
       shoes: 'Shoes',
       accessory: 'Accessory',
     },
+  },
+
+  profile: {
+    title: 'Your style',
+    loading: 'Loading your profile…',
+    loadFailed: 'Your profile could not be loaded.',
+    retake: 'Retake the quiz',
+    save: 'Save my answers',
+    saving: 'Saving…',
+    saveFailed: 'Your answers could not be saved.',
+    cancel: 'Cancel',
+    skip: 'Skip',
+    sizeValue: 'Size',
+    pickOne: 'Choose one answer for every single-choice question.',
+    pickDirection: 'Choose one to three styles.',
+    chooseUpTo: (n: number) => `Choose up to ${n}.`,
+    notAnswered: 'Not answered',
+    none: 'None',
+    feedbackTitle: 'Your feedback on outfits',
+    feedbackCounts: (liked: number, disliked: number, worn: number) =>
+      `Liked ${liked} · Disliked ${disliked} · Worn ${worn}`,
+    noFeedback: 'Rate an outfit from the stylist and it will show here.',
+    rating: { like: 'Liked', dislike: 'Disliked' },
+    wornTag: 'Worn',
+    anyOccasion: 'Everyday',
   },
 
   addItem: {

@@ -23,6 +23,9 @@ export type NewItem = paths['/v1/wardrobe/items']['post']['requestBody']['conten
 export type NewPhoto = paths['/v1/photos']['post']['requestBody']['content']['application/json'];
 export type PhotoUpload = Json<'/v1/photos', 'post'>;
 export type Photo = Json<'/v1/photos/{id}', 'get'>;
+export type Quiz = Json<'/v1/profile/quiz', 'get'>;
+export type ProfileView = Json<'/v1/profile', 'get'>;
+export type ProfileAnswers = paths['/v1/profile']['put']['requestBody']['content']['application/json'];
 
 /** Sends the file straight to storage at the presigned URL. The API never receives it. */
 export async function uploadPhoto(upload: PhotoUpload['upload'], file: Blob): Promise<void> {
@@ -101,4 +104,10 @@ export const api = {
     (await (await request(`/v1/photos/${id}/complete`, { method: 'POST', token })).json()) as Photo,
   photo: async (token: string, id: string) =>
     (await (await request(`/v1/photos/${id}`, { token })).json()) as Photo,
+  quiz: async (token: string) => (await (await request('/v1/profile/quiz', { token })).json()) as Quiz,
+  profile: async (token: string) => (await (await request('/v1/profile', { token })).json()) as ProfileView,
+  saveProfile: async (token: string, answers: ProfileAnswers) =>
+    (await (
+      await request('/v1/profile', { method: 'PUT', body: JSON.stringify(answers), token })
+    ).json()) as ProfileView,
 };
