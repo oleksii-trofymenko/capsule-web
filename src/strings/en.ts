@@ -112,6 +112,21 @@ export const en = {
     anyOccasion: 'Everyday',
   },
 
+  memory: {
+    title: 'What Capsule knows about you',
+    intro: 'Things you told the stylist. It uses them in every conversation.',
+    loading: 'Loading what Capsule remembers…',
+    loadFailed: 'What Capsule remembers could not be loaded.',
+    empty: 'Nothing yet. Tell the stylist what you love or never wear, and it will show here.',
+    kinds: { like: 'Likes', dislike: 'Dislikes', fact: 'About you' },
+    forget: (text: string) => `Forget "${text}"`,
+    forgetAll: 'Forget everything',
+    confirmAll: 'Forget everything Capsule knows about you?',
+    confirmYes: 'Yes, forget it all',
+    keep: 'Keep',
+    forgetFailed: 'That could not be forgotten. Try again.',
+  },
+
   addItem: {
     title: 'Add an item',
     pick: 'Take or choose a photo',

@@ -4,6 +4,7 @@ import { api, isNetworkError, type ProfileAnswers, type Quiz } from '../../api/c
 import { en } from '../../strings/en';
 import { useAuthedCall } from '../auth/SessionContext';
 import { FeedbackSummary } from './FeedbackSummary';
+import { MemoryNotes } from './MemoryNotes';
 import { profileKey } from './queries';
 import { QuizForm } from './QuizForm';
 
@@ -98,6 +99,7 @@ export function ProfileScreen() {
         ))}
       </dl>
       <FeedbackSummary feedback={profile.data.feedback} />
+      <MemoryNotes />
     </section>
   );
 }
