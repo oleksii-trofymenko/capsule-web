@@ -12,15 +12,34 @@ interface Draft {
   multi: Record<string, string[]>;
 }
 
-const fromProfile = (answers: ProfileAnswers | null): Draft => ({
+/** Single questions with a "skip" option start on it, so only the required ones need a pick. */
+const skipped = (quiz: Quiz) =>
+  Object.fromEntries(
+    quiz.questions.flatMap((q) =>
+      q.type === 'single' && q.options.some((o) => o.id === 'skip') ? [[q.id, 'skip']] : [],
+    ),
+  );
+
+const fromProfile = (quiz: Quiz, answers: ProfileAnswers | null): Draft => ({
   sizes: answers?.sizes ?? { top: null, bottom: null, shoes: null },
-  single: answers ? { fit: answers.fit, lifestyle: answers.lifestyle } : {},
+  single: {
+    ...skipped(quiz),
+    ...(answers && {
+      fit: answers.fit,
+      lifestyle: answers.lifestyle,
+      ...(answers.colourTemperature && { colourTemperature: answers.colourTemperature }),
+      ...(answers.colourContrast && { colourContrast: answers.colourContrast }),
+      ...(answers.height && { height: answers.height }),
+    }),
+  },
   multi: answers
     ? {
         directions: answers.directions,
         favouriteColours: answers.favouriteColours,
         avoidColours: answers.avoidColours,
         neverWear: answers.neverWear,
+        frame: answers.frame ?? [],
+        playUp: answers.playUp ?? [],
       }
     : {},
 });
@@ -35,6 +54,11 @@ const toAnswers = (d: Draft) =>
     favouriteColours: d.multi.favouriteColours ?? [],
     avoidColours: d.multi.avoidColours ?? [],
     neverWear: d.multi.neverWear ?? [],
+    colourTemperature: d.single.colourTemperature,
+    colourContrast: d.single.colourContrast,
+    height: d.single.height,
+    frame: d.multi.frame ?? [],
+    playUp: d.multi.playUp ?? [],
   }) as ProfileAnswers;
 
 interface Props {
@@ -49,7 +73,7 @@ interface Props {
 /** The two-minute style quiz, rendered from the questions the API serves. */
 export function QuizForm({ quiz, current, saving, error, onSave, onCancel }: Props) {
   const t = en.profile;
-  const [draft, setDraft] = useState(() => fromProfile(current));
+  const [draft, setDraft] = useState(() => fromProfile(quiz, current));
   const [problem, setProblem] = useState<string | null>(null);
 
   function submit(event: FormEvent) {

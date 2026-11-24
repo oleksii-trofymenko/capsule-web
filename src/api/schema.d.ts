@@ -324,6 +324,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/stylist/traces/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["TracesController_get_v1"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1139,7 +1155,7 @@ export interface operations {
                             }[];
                         } | {
                             /** @enum {string} */
-                            id: "fit" | "lifestyle";
+                            id: "fit" | "lifestyle" | "colourTemperature" | "colourContrast" | "height";
                             /** @enum {string} */
                             type: "single";
                             question: string;
@@ -1149,7 +1165,7 @@ export interface operations {
                             }[];
                         } | {
                             /** @enum {string} */
-                            id: "directions" | "favouriteColours" | "avoidColours" | "neverWear";
+                            id: "directions" | "favouriteColours" | "avoidColours" | "neverWear" | "frame" | "playUp";
                             /** @enum {string} */
                             type: "multi";
                             question: string;
@@ -1210,6 +1226,25 @@ export interface operations {
                             /** @enum {string} */
                             lifestyle: "office" | "smart-casual-work" | "casual" | "active" | "mixed";
                             neverWear: ("high-necklines" | "sleeveless" | "short-hemlines" | "skinny-fits" | "heels" | "logos" | "bold-patterns")[];
+                            /**
+                             * @default skip
+                             * @enum {string}
+                             */
+                            colourTemperature: "warm" | "cool" | "neutral" | "skip";
+                            /**
+                             * @default skip
+                             * @enum {string}
+                             */
+                            colourContrast: "high" | "medium" | "low" | "skip";
+                            /**
+                             * @default skip
+                             * @enum {string}
+                             */
+                            height: "petite" | "average" | "tall" | "skip";
+                            /** @default [] */
+                            frame: ("longer-torso" | "longer-legs" | "broader-shoulders" | "fuller-hips" | "defined-waist" | "straight-frame")[];
+                            /** @default [] */
+                            playUp: ("waist" | "legs" | "shoulders" | "neckline" | "arms")[];
                             /** Format: date-time */
                             updatedAt: string;
                         } | null;
@@ -1275,6 +1310,25 @@ export interface operations {
                     /** @enum {string} */
                     lifestyle: "office" | "smart-casual-work" | "casual" | "active" | "mixed";
                     neverWear: ("high-necklines" | "sleeveless" | "short-hemlines" | "skinny-fits" | "heels" | "logos" | "bold-patterns")[];
+                    /**
+                     * @default skip
+                     * @enum {string}
+                     */
+                    colourTemperature?: "warm" | "cool" | "neutral" | "skip";
+                    /**
+                     * @default skip
+                     * @enum {string}
+                     */
+                    colourContrast?: "high" | "medium" | "low" | "skip";
+                    /**
+                     * @default skip
+                     * @enum {string}
+                     */
+                    height?: "petite" | "average" | "tall" | "skip";
+                    /** @default [] */
+                    frame?: ("longer-torso" | "longer-legs" | "broader-shoulders" | "fuller-hips" | "defined-waist" | "straight-frame")[];
+                    /** @default [] */
+                    playUp?: ("waist" | "legs" | "shoulders" | "neckline" | "arms")[];
                 };
             };
         };
@@ -1315,6 +1369,25 @@ export interface operations {
                             /** @enum {string} */
                             lifestyle: "office" | "smart-casual-work" | "casual" | "active" | "mixed";
                             neverWear: ("high-necklines" | "sleeveless" | "short-hemlines" | "skinny-fits" | "heels" | "logos" | "bold-patterns")[];
+                            /**
+                             * @default skip
+                             * @enum {string}
+                             */
+                            colourTemperature: "warm" | "cool" | "neutral" | "skip";
+                            /**
+                             * @default skip
+                             * @enum {string}
+                             */
+                            colourContrast: "high" | "medium" | "low" | "skip";
+                            /**
+                             * @default skip
+                             * @enum {string}
+                             */
+                            height: "petite" | "average" | "tall" | "skip";
+                            /** @default [] */
+                            frame: ("longer-torso" | "longer-legs" | "broader-shoulders" | "fuller-hips" | "defined-waist" | "straight-frame")[];
+                            /** @default [] */
+                            playUp: ("waist" | "legs" | "shoulders" | "neckline" | "arms")[];
                             /** Format: date-time */
                             updatedAt: string;
                         } | null;
@@ -1492,6 +1565,53 @@ export interface operations {
                 content?: never;
             };
             /** @description No such note for this user */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    TracesController_get_v1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        steps: string[];
+                        occasion: string | null;
+                        candidates: string[];
+                        outfit: string[];
+                        calls: {
+                            step: string;
+                            messages: {
+                                role: string;
+                                text: string;
+                            }[];
+                            output: string | null;
+                            failed: boolean;
+                        }[];
+                        failed: boolean;
+                        /** Format: uuid */
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                    };
+                };
+            };
+            /** @description No such trace for this user */
             404: {
                 headers: {
                     [name: string]: unknown;
