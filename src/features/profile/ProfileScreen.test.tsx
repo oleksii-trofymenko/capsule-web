@@ -83,6 +83,49 @@ const quiz: Quiz = {
       max: 1,
       options: [{ id: 'heels', label: 'Heels' }],
     },
+    {
+      id: 'colourTemperature',
+      type: 'single',
+      question: 'Which colours suit your face better?',
+      options: [
+        { id: 'warm', label: 'Warm' },
+        { id: 'skip', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'colourContrast',
+      type: 'single',
+      question: 'How much contrast is there between your hair, skin and eyes?',
+      options: [
+        { id: 'high', label: 'Strong' },
+        { id: 'skip', label: 'Not sure' },
+      ],
+    },
+    {
+      id: 'height',
+      type: 'single',
+      question: 'How would you describe your height?',
+      options: [
+        { id: 'petite', label: 'Petite' },
+        { id: 'skip', label: 'Rather not say' },
+      ],
+    },
+    {
+      id: 'frame',
+      type: 'multi',
+      question: 'Anything about your frame outfits should work with?',
+      hint: 'Optional.',
+      max: 3,
+      options: [{ id: 'longer-torso', label: 'Longer torso, shorter legs' }],
+    },
+    {
+      id: 'playUp',
+      type: 'multi',
+      question: 'What would you like outfits to show off?',
+      hint: 'Optional.',
+      max: 2,
+      options: [{ id: 'waist', label: 'Waist' }],
+    },
   ],
 };
 
@@ -94,7 +137,14 @@ const answers = {
   avoidColours: [],
   lifestyle: 'mixed',
   neverWear: [],
-} as ProfileAnswers;
+  colourTemperature: 'skip',
+  colourContrast: 'skip',
+  height: 'skip',
+  frame: [],
+  playUp: [],
+} satisfies ProfileAnswers;
+
+type Saved = Omit<NonNullable<ProfileView['profile']>, 'updatedAt'>;
 
 const noFeedback: ProfileView['feedback'] = { liked: 0, disliked: 0, worn: 0, recent: [] };
 
@@ -121,7 +171,8 @@ function api(view: ProfileView, saveStatus = 200, notes: Note[] = []) {
     'PUT /v1/profile': ({ body }: Call) => {
       if (saveStatus !== 200) return json({ message: ['directions: too many'] }, saveStatus);
       current = {
-        profile: { ...(body as ProfileAnswers), updatedAt: '2026-11-17T12:00:00.000Z' },
+        // The form sends every answer, so the body already has the saved profile's shape.
+        profile: { ...(body as Saved), updatedAt: '2026-11-17T12:00:00.000Z' },
         feedback: noFeedback,
       };
       return json(current);
@@ -170,6 +221,33 @@ describe('ProfileScreen', () => {
     expect(screen.getByText('Tops: Letter (XS to XXL) M')).toBeInTheDocument();
     expect(screen.getByText('Relaxed and roomy')).toBeInTheDocument();
     expect(screen.getByText('Rate an outfit from the stylist and it will show here.')).toBeInTheDocument();
+  });
+
+  it('sends the colouring and frame the person describes, and shows them in words', async () => {
+    const calls = api({ profile: null, feedback: noFeedback });
+    renderSignedIn(<ProfileScreen />);
+    const user = userEvent.setup();
+
+    expect(await screen.findByRole('heading', { name: 'Your style in two minutes' })).toBeInTheDocument();
+    await user.click(screen.getByLabelText('Relaxed and roomy'));
+    await user.click(screen.getByLabelText('Classic'));
+    await user.click(screen.getByLabelText('A real mix'));
+    expect(screen.getByLabelText('Rather not say')).toBeChecked();
+    await user.click(screen.getByLabelText('Warm'));
+    await user.click(screen.getByLabelText('Longer torso, shorter legs'));
+    await user.click(screen.getByLabelText('Waist'));
+    await user.click(screen.getByRole('button', { name: 'Save my answers' }));
+
+    expect(await screen.findByRole('heading', { name: 'Your style' })).toBeInTheDocument();
+    expect(calls.find((c) => c.method === 'PUT')?.body).toMatchObject({
+      colourTemperature: 'warm',
+      colourContrast: 'skip',
+      height: 'skip',
+      frame: ['longer-torso'],
+      playUp: ['waist'],
+    });
+    expect(screen.getByText('Warm')).toBeInTheDocument();
+    expect(screen.getByText('Longer torso, shorter legs')).toBeInTheDocument();
   });
 
   it('shows the answers and the feedback, and lets the person retake the quiz', async () => {

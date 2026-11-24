@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { api, isNetworkError, type ProfileAnswers, type Quiz } from '../../api/client';
+import { api, isNetworkError, type ProfileAnswers, type ProfileView, type Quiz } from '../../api/client';
 import { en } from '../../strings/en';
 import { useAuthedCall } from '../auth/SessionContext';
 import { FeedbackSummary } from './FeedbackSummary';
@@ -9,7 +9,10 @@ import { profileKey } from './queries';
 import { QuizForm } from './QuizForm';
 
 /** Each answer in words, using the labels the API's quiz gives its options. */
-function describe(quiz: Quiz, answers: ProfileAnswers): { question: string; answer: string }[] {
+function describe(
+  quiz: Quiz,
+  answers: NonNullable<ProfileView['profile']>,
+): { question: string; answer: string }[] {
   const t = en.profile;
   return quiz.questions.map((q) => {
     if (q.type === 'sizes') {
